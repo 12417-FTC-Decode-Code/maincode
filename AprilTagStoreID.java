@@ -155,6 +155,7 @@ public class AprilTagStoreID extends LinearOpMode {
         }
     }
 
+    // TODO - Research Vision adaptation for positioning
 
     private void moveForward(double inches) {
         int targetTicks = (int)(inches * TICKS_PER_INCH);
