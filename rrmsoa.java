@@ -172,7 +172,6 @@ public class rrmsoa extends LinearOpMode {
                         .setLiveViewContainerId(0)
                         .build();
 
-                telemetry.addData("Vision", "✓ Initialized");
                 telemetry.update();
 
             } catch (Exception e) {
@@ -194,7 +193,6 @@ public class rrmsoa extends LinearOpMode {
                 long elapsed = System.currentTimeMillis() - startTime;
 
                 if (elapsed > VisionConfig.CAMERA_TIMEOUT_MS) {
-                    telemetry.addData("Camera Status", "✗ TIMEOUT");
                     telemetry.update();
                     break;
                 }
@@ -278,7 +276,6 @@ public class rrmsoa extends LinearOpMode {
         MecanumDrive drive = null;
         try {
             drive = new MecanumDrive(hardwareMap, initialPose);
-            telemetry.addData("MecanumDrive", "✓ Initialized");
         } catch (Exception e) {
             telemetry.addData("ERROR", e.getMessage());
             telemetry.update();
@@ -407,3 +404,4 @@ public class rrmsoa extends LinearOpMode {
     }
 
 }
+
