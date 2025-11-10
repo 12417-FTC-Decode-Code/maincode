@@ -23,18 +23,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-/**
- * Road Runner Vision Autonomous with Motor Control
- *
- * SEQUENCE:
- * 1. Move to halfway point (-27.5)
- * 2. STOP and run intake for 2 seconds
- * 3. STOP and run transfer + outtake for 5 seconds
- * 4. Continue to final destination (-20, 4)
- * 5. Scan for AprilTag
- * 6. Execute vision-based path
- */
-
 @Config
 @Autonomous(name = "Vision Auto with Motor Control", group = "Autonomous")
 public class rrmsoa extends LinearOpMode {
@@ -45,7 +33,6 @@ public class rrmsoa extends LinearOpMode {
         public static int TAG_SCAN_TIMEOUT_MS = 4000;
     }
 
-    // Motor subsystem class
     public class MotorSubsystem {
         private final DcMotor intakeMotor;
         private final DcMotor transferMotorLeft;
@@ -59,7 +46,6 @@ public class rrmsoa extends LinearOpMode {
             outakeMotorRight = hardwareMap.get(DcMotor.class, "outake_motor_right");
         }
 
-        // Action to run intake motor for a specific duration
         public class RunIntakeAction implements Action {
             private final double power;
             private final double durationMillis;
@@ -92,7 +78,6 @@ public class rrmsoa extends LinearOpMode {
             }
         }
 
-        // Action to run transfer motor for a specific duration
         public class RunTransferAction implements Action {
             private final double power;
             private final double durationMillis;
@@ -125,7 +110,6 @@ public class rrmsoa extends LinearOpMode {
             }
         }
 
-        // Action to run outtake motors for a specific duration
         public class RunOuttakeAction implements Action {
             private final double durationMillis;
             private long startTime = -1;
@@ -158,7 +142,6 @@ public class rrmsoa extends LinearOpMode {
             }
         }
 
-        // Stop all motors
         public void stopAll() {
             intakeMotor.setPower(0);
             transferMotorLeft.setPower(0);
@@ -221,9 +204,9 @@ public class rrmsoa extends LinearOpMode {
 
             if (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING) {
                 cameraReady = true;
-                telemetry.addData("Camera Status", "✓ READY");
+                telemetry.addData("Camera Status", "READY");
             } else {
-                telemetry.addData("Camera Status", "✗ FAILED");
+                telemetry.addData("Camera Status", "FAILED");
             }
             telemetry.update();
             sleep(500);
@@ -253,7 +236,7 @@ public class rrmsoa extends LinearOpMode {
 
                     if (tag.ftcPose != null) {
                         detectedTagId = tag.id;
-                        packet.put("✓ TAG FOUND", tag.id);
+                        packet.put("TAG FOUND", tag.id);
                         packet.put("Range", String.format("%.2f", tag.ftcPose.range));
                         return false;
                     }
@@ -290,9 +273,6 @@ public class rrmsoa extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addLine("====== INITIALIZING ======");
-        telemetry.update();
-
         Pose2d initialPose = new Pose2d(-55, 55, Math.toRadians(-45));
 
         MecanumDrive drive = null;
@@ -306,56 +286,38 @@ public class rrmsoa extends LinearOpMode {
             return;
         }
 
-        // Initialize motor subsystem
         MotorSubsystem motors = new MotorSubsystem(hardwareMap);
-        telemetry.addData("Motors", "✓ Initialized");
-        telemetry.update();
 
-        telemetry.addLine("[STEP 2] Initializing Vision...");
-        telemetry.update();
 
         VisionProcessor vision = new VisionProcessor(hardwareMap);
         vision.waitForCameraReady();
 
-        telemetry.addLine("[STEP 3] Building Trajectories...");
-        telemetry.update();
-        sleep(500);
-
-        // ===== PHASE 1: Move to HALFWAY point =====
-        // Move from starting position to halfway point
         Action moveToHalfway = drive.actionBuilder(initialPose)
-                .lineToX(-27.5)  // Halfway to final destination (-20)
+                .lineToX(-27.5) 
                 .build();
 
-        // Position after first move
         Pose2d halfwayPose = new Pose2d(-27.5, 55, Math.toRadians(-45));
 
-        // ===== PHASE 2: Run motors while stopped =====
-        // Create motor actions (these run while robot is stopped)
-        Action runIntake = motors.new RunIntakeAction(1.0, 2.0);  // 2 seconds
-        Action runTransfer = motors.new RunTransferAction(1.0, 5.0);  // 5 seconds
-        Action runOuttake = motors.new RunOuttakeAction(5.0);  // 5 seconds
+        Action runIntake = motors.new RunIntakeAction(1.0, 2.0);  
+        Action runTransfer = motors.new RunTransferAction(1.0, 5.0);  
+        Action runOuttake = motors.new RunOuttakeAction(5.0);  
 
-        // Run transfer and outtake in parallel for 5 seconds
         Action transferAndOuttake = new ParallelAction(
                 runTransfer,
                 runOuttake
         );
 
-        // Sequential: first intake (2s), then transfer+outtake (5s)
         Action allMotors = new SequentialAction(
-                runIntake,  // Runs for 2 seconds
-                transferAndOuttake  // Runs for 5 seconds
+                runIntake, 
+                transferAndOuttake  
         );
 
-        // ===== PHASE 3: Continue to final destination =====
         Action continueToFinal = drive.actionBuilder(halfwayPose)
-                .lineToY(-20)  // Continue from halfway (-27.5) to final (-20)
+                .lineToY(-20) 
                 .build();
 
         Pose2d afterMoveForward = new Pose2d(-20, 4, Math.toRadians(0));
 
-        // ===== TAG DETECTION PATHS =====
         Action pathForTag1 = drive.actionBuilder(afterMoveForward)
                 .strafeTo(new Vector2d(-32, 48))
                 .build();
@@ -373,64 +335,37 @@ public class rrmsoa extends LinearOpMode {
                 .lineToY(19)
                 .build();
 
-        telemetry.addLine("✓ Trajectories built");
-        telemetry.addLine("\n========== READY ==========");
-        telemetry.update();
-
         waitForStart();
 
         if (isStopRequested()) return;
 
-        telemetry.addLine("\n========== RUNNING ==========");
-        telemetry.addLine("[PHASE 1] Moving to halfway point...");
+        telemetry.addLine("Moving to halfway point");
         telemetry.update();
 
         try {
             Actions.runBlocking(moveToHalfway);
-            telemetry.addData("Phase 1", "✓ At halfway point");
         } catch (Exception e) {
             telemetry.addData("Phase 1 ERROR", e.getMessage());
         }
-        telemetry.update();
-        sleep(300);
-
-        telemetry.addLine("[PHASE 2] Running motors (intake 2s, transfer+outtake 5s)...");
-        telemetry.update();
 
         try {
             Actions.runBlocking(allMotors);
-            telemetry.addData("Phase 2", "✓ Motors complete");
         } catch (Exception e) {
             telemetry.addData("Phase 2 ERROR", e.getMessage());
         }
-        telemetry.update();
-        sleep(300);
-
-        telemetry.addLine("[PHASE 3] Continuing to final destination...");
-        telemetry.update();
 
         try {
             Actions.runBlocking(continueToFinal);
-            telemetry.addData("Phase 3", "✓ At final position");
         } catch (Exception e) {
             telemetry.addData("Phase 3 ERROR", e.getMessage());
         }
-        telemetry.update();
-        sleep(300);
-
-        telemetry.addLine("[PHASE 4] Scanning for AprilTag...");
-        telemetry.update();
 
         try {
             Actions.runBlocking(vision.scanForAprilTag());
-            telemetry.addData("Phase 4", "✓ Scan complete");
         } catch (Exception e) {
             telemetry.addData("Phase 4 ERROR", e.getMessage());
         }
-        telemetry.update();
-        sleep(300);
 
-        telemetry.addLine("[PHASE 5] Selecting path...");
         int detectedTag = vision.getDetectedTagId();
         Action chosenPath;
 
@@ -458,22 +393,17 @@ public class rrmsoa extends LinearOpMode {
         telemetry.update();
         sleep(500);
 
-        telemetry.addLine("[PHASE 6] Executing vision path...");
-        telemetry.update();
 
         try {
             Actions.runBlocking(chosenPath);
-            telemetry.addData("Phase 6", "✓ Path complete");
         } catch (Exception e) {
             telemetry.addData("Phase 6 ERROR", e.getMessage());
         }
         telemetry.update();
 
-        // Make sure all motors are stopped
         motors.stopAll();
         vision.shutdown();
 
-        telemetry.addLine("\n========== COMPLETE ==========");
-        telemetry.update();
     }
+
 }
