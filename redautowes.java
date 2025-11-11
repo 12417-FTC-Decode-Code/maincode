@@ -43,7 +43,7 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
 
 
             driveMecanum(0, 1, 0);  //1 = foward, -1 = back, 0 = stop
-            sleep(2000);
+            sleep(4500);
 
 
             driveMecanum(0, 0, 0);
@@ -51,7 +51,7 @@ public class MyFIRSTJavaOpMode extends LinearOpMode {
 
 
             driveMecanum(0, 0, 0.5); //first is right, second is both, last is left
-            sleep(676);
+            sleep(1000);
 
 
             driveMecanum(0, 0, 0);
