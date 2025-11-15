@@ -70,7 +70,7 @@ public class teleOpOwls extends LinearOpMode {
             double yleft  = -gamepad1.left_stick_y;
             double yright = -gamepad1.right_stick_y;
             double strafe =  gamepad1.left_stick_x;
-            double rotate =  gamepad1.right_stick_x;
+            double rotate =  -gamepad1.right_stick_x;
 
             double forward = yleft + yright;
 
@@ -130,9 +130,9 @@ public class teleOpOwls extends LinearOpMode {
             servoIntake.setPower(servoPower);
 
             // Transfer
-            if (gamepad1.y) {
+            if (gamepad1.a) {
                 transferMotorLeft.setPower(1.0);
-            } else if (gamepad1.a) {
+            } else if (gamepad1.y) {
                 transferMotorLeft.setPower(-1.0);
             } else {
                 transferMotorLeft.setPower(0.0);
@@ -140,8 +140,8 @@ public class teleOpOwls extends LinearOpMode {
 
             // Outake (dual motors)
             if (gamepad1.right_bumper) {
-                outakeMotorLeft.setPower(-1.0);
-                outakeMotorRight.setPower(1.0);
+                outakeMotorLeft.setPower(-0.8);
+                outakeMotorRight.setPower(0.8);
             } else {
                 outakeMotorLeft.setPower(0.0);
                 outakeMotorRight.setPower(0.0);
