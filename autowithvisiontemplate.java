@@ -47,9 +47,6 @@ public class autowithvisiontemplate extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addLine("====== INITIALIZING ======");
-        telemetry.update();
-
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake_motor");
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -70,7 +67,7 @@ public class autowithvisiontemplate extends LinearOpMode {
         Pose2d startPose = new Pose2d(-55, -55, Math.toRadians(45));
         MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
-        telemetry.addLine("Initializing vision...");
+        telemetry.addLine("Initializing vision");
         telemetry.update();
 
         aprilTag = new AprilTagProcessor.Builder()
