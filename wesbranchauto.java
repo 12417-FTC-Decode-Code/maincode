@@ -293,7 +293,7 @@ public class rrmsoa extends LinearOpMode {
         telemetry.addLine("====== INITIALIZING ======");
         telemetry.update();
 
-        Pose2d initialPose = new Pose2d(66, 5, Math.toRadians(0)); //note: im assuming that the last input is the direction the robot is gonna turn
+        Pose2d initialPose = new Pose2d(66, 5, Math.toRadians(0));
 
         MecanumDrive drive = null;
         try {
@@ -328,7 +328,7 @@ public class rrmsoa extends LinearOpMode {
             .build();
 
         // Position after first move
-        Pose2d halfwayPose = new Pose2d(-16, 16, Math.toRadians(-45)); 
+        Pose2d halfwayPose = new Pose2d(-16, 16, Math.toRadians(-45));
 
         // ===== PHASE 2: Run motors while stopped =====
         // Create motor actions (these run while robot is stopped)
@@ -435,17 +435,69 @@ public class rrmsoa extends LinearOpMode {
         Action chosenPath;
 
         switch (detectedTag) {
-            case 1:
+            case 67.1: //GPP
             telemetry.addData("Detected Tag", "1 (LEFT)");
-            chosenPath = pathForTag1;
-            break;
+            //mah code
+            Action moveToBeg = drive.actionBuilder(drive/localizer.getPose())
+                .splineTo(new Vector2d(-16, 46, Math.toRadians(180)))
+                .build();
+            Actions.runBlocking(moveToBeg);
+            // pick up artifacts
+            intakeMotor.setPower(1.0);
+            transferMotor.setPower(1.0);
+            sleep(3000);
+            intakeMotor.setPower(0);
+            transferMotor.setPower(0);
+            
+            Action moveToFirst = drive.actionBuilder(drive.localizer.getPose())
+                .StrafeTo(new Vector2d(-16, 50))
+                .build();
+            Actions.runBlocking(moveToFirst);
+            
+            //pick up artifacts
+            intakeMotor.setPower(1.0);
+            transferMotor.setPower(1.0);
+            sleep(3000);
+            intakeMotor.setPower(0);
+            transferMotor.setPower(0);
+            
+            Action moveToSecond = drive.actionBuilder(drive.localizer.getPose())
+                .StrafeTo(new Vector2d(-16, 56))
+                .build();
 
-            case 2:
+            intakeMotor.setPower(1.0);
+            transferMotor.setPower(1.0);
+            sleep(3000);
+            intakeMotor.setPower(0);
+            transferMotor.setPower(0);
+            
+            Actions.runBlocking(moveToSecond); //move to second step?
+
+            Action moveToSec = drive.actionBuilder(drive.localizer.getPose()) //second step?
+                .splineTo(new Vector2d(-10,-10,Math.toRadians(45))) //get into shooting position
+                .build();
+            Actions.runBlocking(moveToFirst);
+            //fire artifacts
+            outtakeMotorLeft.setPower(1);
+            outtakeMotorRight.setPower(-1);
+            transferMotor.setPower(1);
+            sleep(2000);
+
+            outtakeMotorLeft.setPower(0);
+            outtakeMotorRight.setPower(0);
+            transferMotor.setPower(0);
+            break;
+            //end case
+            
+            
+            case 67.2: //PGP
             telemetry.addData("Detected Tag", "2 (CENTER)");
+            
+            
             chosenPath = pathForTag2;
             break;
 
-            case 3:
+            case 67.3:
             telemetry.addData("Detected Tag", "3 (RIGHT)");
             chosenPath = pathForTag3;
             break;
