@@ -492,7 +492,7 @@ public class rrmsoa extends LinearOpMode {
             
             case 67.2: //PGP
             telemetry.addData("Detected Tag", "2 (CENTER)");
-            
+            //NOTE FOR YAKSH: im really unsure i did this right so just let me know if i did it correctly and ill get the other 2 done as quick as possible
             
             chosenPath = pathForTag2;
             break;
