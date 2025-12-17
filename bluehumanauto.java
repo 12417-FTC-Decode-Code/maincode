@@ -89,7 +89,8 @@ public class bluehumanauto extends LinearOpMode {
             transferMotor.setPower(-1.0);
             outakeMotorLeft.setPower(-0.7);
             outakeMotorRight.setPower(0.7);
-            sleep(15000);  // 15 seconds
+            intakeMotor.setPower(-1.0);
+            sleep(10000);  // 15 seconds
 
             telemetry.addLine("✓ Phase 3 Complete");
             telemetry.update();
@@ -128,7 +129,7 @@ public class bluehumanauto extends LinearOpMode {
         transferMotor.setPower(0);
         outakeMotorLeft.setPower(0);
         outakeMotorRight.setPower(0);
-        servoMovement.setPower(0);
+        // servoMovement.setPower(0);
 
         Pose2d finalPose = drive.localizer.getPose();
         telemetry.addData("Final X", String.format("%.2f", finalPose.position.x));

@@ -140,8 +140,8 @@ public class teleOpOwls extends LinearOpMode {
 
             // Outake (dual motors)
             if (gamepad1.right_bumper) {
-                outakeMotorLeft.setPower(-0.7);
-                outakeMotorRight.setPower(0.7);
+                outakeMotorLeft.setPower(-0.65);
+                outakeMotorRight.setPower(0.65);
             } else {
                 outakeMotorLeft.setPower(0.0);
                 outakeMotorRight.setPower(0.0);
