@@ -115,14 +115,72 @@ public class redhuamnauto extends LinearOpMode {
 
             Actions.runBlocking(
                     drive.actionBuilder(currentPose)
-                            .splineTo(new Vector2d(60,38), Math.toRadians(0))
+                            .splineTo(new Vector2d(60,38), Math.toRadians(-90))
                             .build()
             );
-        Actions.runBlocking(
-          drive.actionBuilder(currentpose
+        Action LightningChariot = new Pose2d((drive.localizer.getPose())
+                .lineTo(new pose2d(60,64))
+                .build()
+        Actions.runBlocking(LightningChariot);
+        
         intakemotor.setPower(-1.0);
-        sleep
+        sleep(6000);
         transferMotor.setPower(-1.0)
+        sleep(6000);
+         intakeMotor.setPower(0);
+        transferMotor.setPower(0);
+        Actions.runBlocking(
+            drive.actioBuilder((drive.localizer.getPose())
+                    .splineTo(new Vector2d(0,60), Math.toRadians(-80))
+                    .build()
+        );
+          Actions.runBlocking(
+            drive.actioBuilder((drive.localizer.getPose())
+                    .splineTo(new Vector2d(-10, 10), Math.toRadians(-45))
+                    .build()
+        );
+        transferMotor.setPower(-1.0);
+        outakeMotorLeft.setPower(-0.7);
+        outakeMotorRight.setPower(0.7);
+        intakeMotor.setPower(-1.0);
+        sleep(10000);
+        intakeMotor.setPower(0);
+        transferMotor.setPower(0);
+        outakeMotorLeft.setPower(0);
+        outakeMotorRight.setPower(0);
+        Actions.runBlocking(
+                    drive.actionBuilder(currentPose)
+                            .splineTo(new Vector2d(60,38), Math.toRadians(-90))
+                            .build()
+        );
+          intakemotor.setPower(-1.0);
+        sleep(6000);
+        transferMotor.setPower(-1.0)
+        sleep(6000);
+         intakeMotor.setPower(0);
+        transferMotor.setPower(0);
+        Actions.runBlocking(LighningChariot);
+
+         Actions.runBlocking(
+            drive.actioBuilder((drive.localizer.getPose())
+                    .splineTo(new Vector2d(0,60), Math.toRadians(-80))
+                    .build()
+        );
+
+         Actions.runBlocking(
+            drive.actioBuilder((drive.localizer.getPose())
+                    .splineTo(new Vector2d(-10, 10), Math.toRadians(-45))
+                    .build()
+        );
+        transferMotor.setPower(-1.0);
+        outakeMotorLeft.setPower(-0.7);
+        outakeMotorRight.setPower(0.7);
+        intakeMotor.setPower(-1.0);
+        sleep(10000);
+        intakeMotor.setPower(0);
+        transferMotor.setPower(0);
+        outakeMotorLeft.setPower(0);
+        outakeMotorRight.setPower(0);
         
         } catch (Exception e) {
             telemetry.addData("ERROR", e.getMessage());
@@ -130,10 +188,7 @@ public class redhuamnauto extends LinearOpMode {
         telemetry.update();
 
         // Stop all motors
-        intakeMotor.setPower(0);
-        transferMotor.setPower(0);
-        outakeMotorLeft.setPower(0);
-        outakeMotorRight.setPower(0);
+        
 
         Pose2d finalPose = drive.localizer.getPose();
         telemetry.addData("Final X", String.format("%.2f", finalPose.position.x));
